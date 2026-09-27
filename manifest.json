@@ -1,0 +1,13 @@
+{
+  "schemaVersion": 1,
+  "id": "emanuel.boot-into",
+  "name": "Boot Into",
+  "version": "1.0.0",
+  "author": "Emanuel4100",
+  "license": "MIT",
+  "description": "Reboot once into Windows, another distro, or firmware setup from the Omarchy System menu, via UEFI BootNext.",
+  "homepage": "https://github.com/Emanuel4100/omarchy-boot-into",
+  "repository": "https://github.com/Emanuel4100/omarchy-boot-into",
+  "kinds": ["service"],
+  "entryPoints": { "service": "Service.qml" }
+}

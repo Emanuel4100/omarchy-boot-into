@@ -1,0 +1,12 @@
+  // Boot To, placed between Logout and Reboot in the System menu.
+  //
+  // The menu has no ordering field: rows appear in the order their ids are
+  // first seen, defaults first, so a new id always lands after Shutdown.
+  // Hide the stock Reboot/Shutdown rows and re-add them after Boot To.
+  "system.reboot": {"when":"false"},
+  "system.shutdown": {"when":"false"},
+  "system.boot-into": {"icon":"󰜉","label":"Boot To","aliases":["boot","reboot-to"],
+    "description":"Reboot once into Windows or another OS",
+    "action":"omarchy-boot-into"},
+  "system.reboot-now": {"icon":"󰜉","label":"Reboot","action":"omarchy-system-reboot"},
+  "system.shutdown-now": {"icon":"󰐥","label":"Shutdown","action":"omarchy-system-shutdown"}

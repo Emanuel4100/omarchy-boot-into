@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# Reboot once into another installed OS (Windows, other distros) or firmware setup.
+# Reads active UEFI boot entries from efibootmgr and sets BootNext, so the
+# following boot returns to the normal boot order (Limine/Omarchy).
+#
+# Usage: omarchy-boot-into [--list]
+
+set -euo pipefail
+
+WINDOWS_ICON=$''
+LINUX_ICON=$''
+FIRMWARE_ICON=$'\U000f035b'
+
+list_rows() {
+  local efi current num label path icon
+  efi=$(efibootmgr 2>/dev/null) || return 0
+  current=$(sed -n 's/^BootCurrent: //p' <<<"$efi")
+
+  while IFS=$'\t' read -r head path; do
+    [[ $head =~ ^Boot([0-9A-Fa-f]{4})\*\ (.+)$ ]] || continue
+    num=${BASH_REMATCH[1]}
+    label=${BASH_REMATCH[2]}
+
+    [[ $num == "$current" ]] && continue
+    [[ $label =~ Limine|EFI\ Shell ]] && continue
+    [[ $path =~ ^Ven(Media|Hw) ]] && continue
+
+    if [[ $label == *Windows* ]]; then icon=$WINDOWS_ICON; else icon=$LINUX_ICON; fi
+    printf '%s\t%s\t%s\n' "$icon" "$label" "$num"
+  done <<<"$efi"
+
+  printf '%s\t%s\t%s\n' "$FIRMWARE_ICON" "Firmware Setup (BIOS)" "firmware"
+}
+
+rows=$(list_rows)
+
+if [[ ${1:-} == "--list" ]]; then
+  printf '%s\n' "$rows"
+  exit 0
+fi
+
+selection=$(omarchy-menu-select "Boot To" <<<"$rows") || exit 0
+[[ -n $selection ]] || exit 0
+
+label=$(cut -f1 <<<"$selection")
+key=$(cut -f2 <<<"$selection")
+
+if [[ $key == "firmware" ]]; then
+  systemd-run --user --collect --quiet --on-active="2s" --timer-property=AccuracySec=100ms \
+    systemctl reboot --firmware-setup --no-wall || exit 1
+  omarchy-osd -i reboot -m "Rebooting to firmware setup" -d 5000
+  omarchy-hyprland-window-close-all
+  exit 0
+fi
+
+[[ $key =~ ^[0-9A-Fa-f]{4}$ ]] || exit 1
+
+if ! pkexec efibootmgr --bootnext "$key" >/dev/null 2>&1; then
+  omarchy-notification-send "Boot To: cancelled, $label not set as next boot"
+  exit 1
+fi
+
+omarchy-system-reboot
