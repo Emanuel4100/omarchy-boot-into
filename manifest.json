@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "emanuel.boot-into",
   "name": "Boot Into",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "Emanuel4100",
   "license": "MIT",
   "description": "Reboot once into Windows, another distro, or firmware setup from the Omarchy System menu, via UEFI BootNext.",

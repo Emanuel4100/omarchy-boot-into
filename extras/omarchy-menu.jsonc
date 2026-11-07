@@ -8,5 +8,5 @@
   "system.boot-into": {"icon":"󰜉","label":"Boot To","aliases":["boot","reboot-to"],
     "description":"Reboot once into Windows or another OS",
     "action":"omarchy-boot-into"},
-  "system.reboot-now": {"icon":"󰜉","label":"Reboot","action":"omarchy-system-reboot"},
-  "system.shutdown-now": {"icon":"󰐥","label":"Shutdown","action":"omarchy-system-shutdown"}
+  "system.reboot-now": {"icon":"󰜉","label":"Reboot","action":"omarchy-system reboot"},
+  "system.shutdown-now": {"icon":"󰐥","label":"Shutdown","action":"omarchy-system shutdown"}

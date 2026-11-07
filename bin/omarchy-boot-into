@@ -61,4 +61,4 @@ if ! pkexec efibootmgr --bootnext "$key" >/dev/null 2>&1; then
   exit 1
 fi
 
-omarchy-system-reboot
+omarchy-system reboot
